@@ -44,7 +44,8 @@ const ADAPTER_API_MAP:{[key:string]: API_MAP} = {
       GET: '',
       COMMIT: '',
       TERMINATE: '',
-      GET_LAST_ERROR: ''
+      GET_LAST_ERROR: '',
+      GET_ERROR_STRING: ''
     }
   }
 }

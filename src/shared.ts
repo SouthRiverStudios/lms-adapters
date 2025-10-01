@@ -30,7 +30,8 @@ interface API_METHODS {
   GET:string
   COMMIT:string
   TERMINATE:string
-  GET_LAST_ERROR:string
+  GET_LAST_ERROR:string,
+  GET_ERROR_STRING:string
 }
 
 export interface API_MAP {

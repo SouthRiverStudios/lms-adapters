@@ -44,7 +44,8 @@ const ADAPTER_API_MAP:{[key:string]: API_MAP} = {
       GET: 'LMSGetValue',
       COMMIT: 'LMSCommit',
       TERMINATE: 'LMSFinish',
-      GET_LAST_ERROR: 'LMSGetLastError'
+      GET_LAST_ERROR: 'LMSGetLastError',
+      GET_ERROR_STRING: 'LMSGetErrorString'
     }
   },
   [VERSIONS.V2004]: {
@@ -78,7 +79,8 @@ const ADAPTER_API_MAP:{[key:string]: API_MAP} = {
       GET: 'GetValue',
       COMMIT: 'Commit',
       TERMINATE: 'Terminate',
-      GET_LAST_ERROR: 'GetLastError'
+      GET_LAST_ERROR: 'GetLastError',
+      GET_ERROR_STRING: 'GetErrorString'
     }
   }
 }
@@ -181,7 +183,19 @@ export default class AdapterSCORM {
       if (window && window.addEventListener) {
         window.addEventListener('unload', this.terminate)
       }
-      return this.read()
+      const init_method = this.getAPIMethod(this.#api_map.methods.INITIALIZE)
+      const success = !!init_method && init_method('') === 'true'
+      if (!success) {
+        const errorCode = this.getAPIMethod(this.#api_map.methods.GET_LAST_ERROR)
+        const errorString = this.getAPIMethod(this.#api_map.methods.GET_ERROR_STRING)
+        if (errorCode && errorString) {
+          console.log("Initialization failed: " + errorString(errorCode()))
+        }
+        return Promise.reject(new Error('#initialize > Adapter could not be initialized'))
+      }
+      else {
+        return this.read()
+      }
     }
     else {
       return Promise.reject(new Error('#initialize > Adapter could not be initialized'))
@@ -193,33 +207,25 @@ export default class AdapterSCORM {
     return new Promise((resolve) => {
 
       if (this.#api) {
-        const init_method = this.getAPIMethod(this.#api_map.methods.INITIALIZE)
-        let success = !!init_method && init_method('') === 'true'
-  
-        if (success) {
-          let user_status = createUser()
-          const properties = this.#api_map.properties
-          const strings = this.#api_map.strings
-          user_status.student_name = this.getProperty(properties.STUDENT_NAME) as string
-          user_status.student_id = this.getProperty(properties.STUDENT_ID)
-          user_status.location = this.getProperty(properties.LOCATION) as string
-          const suspend_data = this.getProperty(properties.SUSPEND_DATA) as string
-          user_status.suspend_data = suspend_data.split(',')
-          user_status.score_raw = this.getProperty(properties.SCORE_RAW) as number
-          user_status.credit = this.getProperty(properties.CREDIT)
-          user_status.total_time = this.getProperty(properties.TOTAL_TIME)
+        let user_status = createUser()
+        const properties = this.#api_map.properties
+        const strings = this.#api_map.strings
+        user_status.student_name = this.getProperty(properties.STUDENT_NAME) as string
+        user_status.student_id = this.getProperty(properties.STUDENT_ID)
+        user_status.location = this.getProperty(properties.LOCATION) as string
+        const suspend_data = this.getProperty(properties.SUSPEND_DATA) as string
+        user_status.suspend_data = suspend_data.split(',')
+        user_status.score_raw = this.getProperty(properties.SCORE_RAW) as number
+        user_status.credit = this.getProperty(properties.CREDIT)
+        user_status.total_time = this.getProperty(properties.TOTAL_TIME)
 
-          if (
-            this.getProperty(properties.STATUS) === strings.NOT_ATTEMPTED || 
-            this.getProperty(properties.STATUS) === strings.UNKNOWN
-          ) {
-            user_status.status = strings.INCOMPLETE
-          }
-          resolve(user_status)
+        if (
+          this.getProperty(properties.STATUS) === strings.NOT_ATTEMPTED || 
+          this.getProperty(properties.STATUS) === strings.UNKNOWN
+        ) {
+          user_status.status = strings.INCOMPLETE
         }
-        else {
-          throwNoApi('#read')
-        }
+        resolve(user_status)
       }
       else {
         throwNoApi('#read')

@@ -32,9 +32,9 @@ scorm.initialize()
     })
 
 // read user
-score.read(user => {
+scorm.read(user => {
     lms_user = user
-}
+})
 
 // update and write user
 lms_user.percent_complete = 1
