@@ -9,7 +9,7 @@ SCORM and AICC compliant communication objects for transferring data between an 
 ### Installation
 
 ```sh
-npm i @srs/lms-adapters
+npm i @sthrvr/lms-adapters
 ```
 
 ## Usage
@@ -17,8 +17,8 @@ npm i @srs/lms-adapters
 ```javascript
 
 // import either adapter
-import AdapterSCORM from 'srs-lms-adapters'
-import AdapterAICC from 'srs-lms-adapters'
+import AdapterSCORM from '@sthrvr/lms-adapters'
+import AdapterAICC from '@sthrvr/lms-adapters'
 
 // create a new adapter
 const version = AdapterSCORM.Versions.V1_2
