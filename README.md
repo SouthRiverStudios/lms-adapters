@@ -9,7 +9,7 @@ SCORM and AICC compliant communication objects for transferring data between an 
 ### Installation
 
 ```sh
-npm i srs-lms-adapters
+npm i @srs/lms-adapters
 ```
 
 ## Usage
