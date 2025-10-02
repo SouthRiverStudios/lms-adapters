@@ -1,10 +1,9 @@
 {
   "name": "@srs/lms-adapters",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "SCORM and AICC compliant communication objects for transferring data between an application and an LMS system.",
   "scripts": {
-    "build": "tsup",
-    "prepare": "npm run build"
+    "build": "tsup"
   },
   "author": "South River Studios, LLC",
   "license": "MIT",
