@@ -67,7 +67,7 @@ switch (srs.adapter.version) {
             GET : 'LMSGetValue',
             COMMIT : 'LMSCommit',
             TERMINATE : 'LMSFinish',
-             GET_LAST_ERROR : 'LMSGetLastError'
+            GET_LAST_ERROR : 'LMSGetLastError'
         };
 
         break;

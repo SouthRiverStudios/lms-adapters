@@ -1,71 +1,79 @@
-# SRS Data Adapters
+# SRS LMS Adapters
 
-SCORM and AICC data adapters for transferring data between an application and an LMS system.
+## About
 
-## Instructions
+SCORM and AICC compliant communication objects for transferring data between an application and an LMS system.
 
-Include either the scorm\_adapter.js or aicc\_adapter.js script in the root of your application. 
+## Getting Started
 
-Manifest, metadata, descriptor files, etc. specific to each protocol should be included in the root of each application.
+### Installation
 
-#### srs.adapter.type _(String)_
-LMS protocol type, 'SCORM' or 'AICC'. 
+```sh
+npm i srs-lms-adapters
+```
 
-#### srs.adapter.version _(String)_
-LMS protocol version.
+## Usage
 
-##### AICC: 
-Specify AICC version.
+```javascript
 
-##### SCORM: 
+// import either adapter
+import AdapterSCORM from 'srs-lms-adapters'
+import AdapterAICC from 'srs-lms-adapters'
 
-Specify support for SCORM 1.2 or SCORM 2004.
+// create a new adapter
+const version = AdapterSCORM.Versions.V1_2
+const scorm = new AdapterSCORM(version)
+let lms_user
 
-SCORM 1.2:
+// initialize object to start communication
+scorm.initialize()
+     .then(user => {
+        lms_user = user
+    })
 
-    srs.adapter.version = '1.2';
-    
-SCORM 2004:
+// read user
+scorm.read(user => {
+    lms_user = user
+})
 
-    srs.adapter.version = '2004';
-    
-SCORM version can be set before file inclusion:
+// update and write user
+lms_user.percent_complete = 1
+scorm.write(lms_user)
 
-    <script type="text/javascript">
-        var srs = srs || {};
-        srs.adapter = srs.adapter || {};
-        srs.adapter.version = '1.2';
-    </script>
-    <script src="srs-data-adapters/scorm_adapter.js"></script>
+// end session
+if (scorm.terminate()) {
+    lms_user = null
+}
 
-#### srs.adapter.properties _(Object)_
-LMS property names specific to protocol type and version.
+```
 
-#### srs.adapter.strings _(Object)_
-LMS string names specific to protocol type and version.
+## Roadmap
 
-#### srs.adapter.methods _(Object)_
-LMS method names specific to protocol type and version.
+- [ ] Improved documentation
+- [ ] Add Changelog
+- [ ] xAPI support
 
-#### srs.adapter.user _(Object)_
-User object to store and pass data between application and system.
+## Contributing
 
-#### srs.adapter.connection.initialize
-Initializes the connection with the system.
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
-    srs.adapter.connection.initialize(callback);
-    
- - __callback__ : Callback function within the application to consume captured user data from system.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-#### srs.adapter.connection.write
-Write data to the system.
+## License
 
-    srs.adapter.connection.write(user);
-    
-- __user__ : Object of user properties to write to the system in form of srs.adapter.user object.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-#### srs.adapter.connection.exit
-Exit the connection, and terminate the session with the system.
+## Contact
 
-    srs.adapter.connection.exit();
+South River Studios, LLC - [@\_southriver\_](https://twitter.com/_southriver_) - dev@southriverstudios.com
 
+Project Link: [https://github.com/SouthRiverStudios/srs-lms-adapters](https://github.com/SouthRiverStudios/srs-lms-adapters)
+
+
+## Legacy Version
+
+See `legacy/README.md`
