@@ -225,6 +225,9 @@ export default class AdapterSCORM {
         ) {
           user_status.status = strings.INCOMPLETE
         }
+        else {
+          user_status.status = this.getProperty(properties.STATUS) as string
+        }
         resolve(user_status)
       }
       else {
@@ -240,7 +243,7 @@ export default class AdapterSCORM {
       if (!user) {
         throw new Error('#write > method requires a ScormUser object ')
       }
-      
+
       let score = 0
       let status = null
 
