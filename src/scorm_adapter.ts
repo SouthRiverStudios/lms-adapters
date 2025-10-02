@@ -240,12 +240,8 @@ export default class AdapterSCORM {
       if (!user) {
         throw new Error('#write > method requires a ScormUser object ')
       }
-
-      let passing_score = user.passing_score
+      
       let score = 0
-      let percent_complete = user.percent_complete
-      let suspend_data = user.suspend_data
-      let location = user.location
       let status = null
 
       const properties = this.#api_map.properties
@@ -258,10 +254,10 @@ export default class AdapterSCORM {
         score = this.getProperty(properties.SCORE_RAW) as number
       }
 
-      if (passing_score && score && score >= passing_score && percent_complete === 1) {
+      if (user.passing_score && score && score >= user.passing_score && user.percent_complete === 1) {
         status = strings.COMPLETED
       }
-      else if (!passing_score && percent_complete === 1) {
+      else if (!user.passing_score && user.percent_complete === 1) {
         status = strings.COMPLETED
       }
       else {
@@ -270,10 +266,10 @@ export default class AdapterSCORM {
 
       this.setProperty(properties.SCORE_RAW, score)
       this.setProperty(properties.STATUS, status)
-      this.setProperty(properties.LOCATION, location)
+      this.setProperty(properties.LOCATION, user.location)
 
-      if (suspend_data && suspend_data.length) {
-        this.setProperty(properties.SUSPEND_DATA, suspend_data.toString())
+      if (user.suspend_data && user.suspend_data.length) {
+        this.setProperty(properties.SUSPEND_DATA, user.suspend_data.toString())
       }
 
       if (this.#version === VERSIONS.V2004 && this.getProperty(properties.STATUS) === strings.COMPLETED) {
