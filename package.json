@@ -1,5 +1,5 @@
 {
-  "name": "@srs/lms-adapters",
+  "name": "@sthrvr/lms-adapters",
   "version": "0.1.0",
   "description": "SCORM and AICC compliant communication objects for transferring data between an application and an LMS system.",
   "scripts": {
